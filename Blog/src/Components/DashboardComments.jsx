@@ -105,9 +105,9 @@ export default function DashboardComments() {
 
                     <Table.Cell>{comment.numberOfLikes}</Table.Cell>
 
-                    <Table.Cell>{comment.postId}</Table.Cell>
+                    <Table.Cell>{comment?.postId?.title || 'Post Not Found'}</Table.Cell>
 
-                    <Table.Cell>{comment.userId}</Table.Cell>
+                    <Table.Cell>{comment?.userId?.username || 'User Not Found'}</Table.Cell>
 
                     <Table.Cell>
                       <span

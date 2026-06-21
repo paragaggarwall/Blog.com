@@ -7,11 +7,13 @@ const commentSchema = new mongoose.Schema(
       required: true,
     },
     postId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",  // your Post model name
       required: true,
     },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",  // your User model name
       required: true,
     },
     likes: {
@@ -26,6 +28,6 @@ const commentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Comment = mongoose.model('Comment',commentSchema);
+const Comment = mongoose.model("Comment", commentSchema);
 
 export default Comment;

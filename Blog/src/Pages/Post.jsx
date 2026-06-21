@@ -14,6 +14,7 @@ export default function Post() {
   const [recentPosts, setRecentsPosts] = useState(null);
 
   useEffect(() => {
+    if (!postSlug) return;
     const fetchPostData = async () => {
       try {
         setLoading(true);
@@ -50,7 +51,7 @@ export default function Post() {
     } catch (error) {
       console.log(error.message);
     }
-  });
+  }, []);
 
   if (loading)
     return (
