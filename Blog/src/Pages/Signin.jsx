@@ -7,7 +7,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/User/userSlice";
-import Oauth from "../Components/Oauth";
+
 export default function Signin() {
   const [formData, setFormData] = useState({});
   const { loading, error: errorMessage } = useSelector((state) => state.user);
@@ -30,13 +30,11 @@ export default function Signin() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
+      if (data.success === false || !res.ok) {
+        return dispatch(signInFailure(data.message || "Sign in failed"));
       }
-      if (res.ok) {
-        dispatch(signInSuccess(data));
-        navigate("/");
-      }
+      dispatch(signInSuccess(data));
+      navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
@@ -91,13 +89,13 @@ export default function Signin() {
                 {loading ? (
                   <>
                     <Spinner size="sm" />
-                    <span>Loading....</span>
+                    <span>Loading...</span>
                   </>
                 ) : (
                   "Sign In"
                 )}
               </Button>
-              <Oauth />
+
             </form>
             <div className="flex gap-2 text-sm mt-5">
               <span>Don't have an account?</span>

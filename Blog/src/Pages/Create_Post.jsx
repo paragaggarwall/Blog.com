@@ -3,13 +3,7 @@ import React from "react";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { app } from "../firebase";
+import axios from "axios";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import {useNavigate} from 'react-router-dom'
@@ -31,29 +25,32 @@ export default function Create_Post() {
         return;
       }
       setPostImageError(null);
-      const storage = getStorage(app);
-      const fileName = new Date().getTime() + "-" + file.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setPostImageProgress(progress.toFixed(0));
-        },
-        (error) => {
-          setPostImageError("Image Upload Failed");
-          setPostImageProgress(null);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setPostImageProgress(null);
-            setPostImageError(null);
-            setPostFormData({ ...postFormData, image: downloadURL });
+      setPostImageProgress(0);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async () => {
+        try {
+          const base64data = reader.result;
+          const response = await axios.post("/api/upload/image", {
+            image: base64data
+          }, {
+            headers: {
+              "Content-Type": "application/json"
+            },
+            onUploadProgress: (progressEvent) => {
+              const progress = (progressEvent.loaded / progressEvent.total) * 100;
+              setPostImageProgress(progress.toFixed(0));
+            }
           });
+          const downloadURL = response.data.url;
+          setPostImageProgress(null);
+          setPostImageError(null);
+          setPostFormData({ ...postFormData, image: downloadURL });
+        } catch (error) {
+          setPostImageError(error.response?.data?.message || "Image Upload Failed");
+          setPostImageProgress(null);
         }
-      );
+      };
     } catch (error) {
       setPostImageError("Image Upload Failed");
       setPostImageProgress(null);
