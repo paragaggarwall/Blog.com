@@ -14,7 +14,8 @@ import {
   signoutSuccess,
 } from "../redux/User/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import { BASE_URL } from "../config";
 
 export default function DashboardProfile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -54,12 +55,13 @@ export default function DashboardProfile() {
       reader.onloadend = async () => {
         try {
           const base64data = reader.result;
-          const response = await axios.post("/api/upload/image", {
+          const response = await axios.post(`${BASE_URL}/api/upload/image`, {
             image: base64data
           }, {
             headers: {
               "Content-Type": "application/json"
             },
+            withCredentials: true,
             onUploadProgress: (progressEvent) => {
               const progress = (progressEvent.loaded / progressEvent.total) * 100;
               setImageUploadingProgress(progress.toFixed(0));
@@ -106,9 +108,10 @@ export default function DashboardProfile() {
     }
     try {
       dispatch(updateStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`${BASE_URL}/api/user/update/${currentUser._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(updateFormData),
       });
       const data = await res.json();
@@ -131,8 +134,9 @@ export default function DashboardProfile() {
     setShowPopup(false);
     try {
       dispatch(deleteStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`${BASE_URL}/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) {
@@ -149,8 +153,9 @@ export default function DashboardProfile() {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch("api/user/signout", {
+      const res = await fetch(`${BASE_URL}/api/user/signout`, {
         method: "POST",
+        credentials: "include",
       });
       const data = await res.json();
       if (res.ok) {

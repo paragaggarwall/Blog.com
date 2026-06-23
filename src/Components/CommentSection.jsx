@@ -3,6 +3,7 @@ import moment from "moment";
 import { Button, Textarea } from "flowbite-react";
 import { FaThumbsUp } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../config";
 
 export default function CommentSection({ comment, onLike, onEdit, onDelete }) {
   const [user, setUser] = useState(null);
@@ -13,7 +14,9 @@ export default function CommentSection({ comment, onLike, onEdit, onDelete }) {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const res = await fetch(`/api/user/${comment.userId}`);
+        const res = await fetch(`${BASE_URL}/api/user/${comment.userId}`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setUser(data);
@@ -32,9 +35,10 @@ export default function CommentSection({ comment, onLike, onEdit, onDelete }) {
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`/api/comment/editComment/${comment._id}`, {
+      const res = await fetch(`${BASE_URL}/api/comment/editComment/${comment._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           content: editedComment,
         }),

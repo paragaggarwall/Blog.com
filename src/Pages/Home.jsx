@@ -2,6 +2,7 @@ import React, {useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import CallToAction from '../Components/CallToAction.jsx';
 import PostCrad from '../Components/PostCard.jsx'
+import { BASE_URL } from "../config";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -9,7 +10,9 @@ export default function Home() {
   useEffect( () => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?limit=9`);
+        const res = await fetch(`${BASE_URL}/api/post/getposts?limit=9`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setPosts(data.posts);

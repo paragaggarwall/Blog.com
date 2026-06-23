@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import CommentSection from "./CommentSection";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { BASE_URL } from "../config";
 
 export default function Comment({postId}) {
   const { currentUser } = useSelector((state) => state.user);
@@ -25,11 +26,12 @@ export default function Comment({postId}) {
       return;
     }
     try {
-      const res = await fetch("/api/comment/create", {
+      const res = await fetch(`${BASE_URL}/api/comment/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           content: commentChar,
           postId,
@@ -50,7 +52,9 @@ export default function Comment({postId}) {
   useEffect(() => {
     const getComments = async () => {
       try {
-        const res = await fetch(`/api/comment/getPostComment/${postId}`);
+        const res = await fetch(`${BASE_URL}/api/comment/getPostComment/${postId}`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setPostComment(data);
@@ -68,8 +72,9 @@ export default function Comment({postId}) {
         navigate("/signin");
         return;
       }
-      const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+      const res = await fetch(`${BASE_URL}/api/comment/likeComment/${commentId}`, {
         method: "PUT",
+        credentials: "include",
       });
       if (res.ok) {
         const data = await res.json();
@@ -103,8 +108,9 @@ export default function Comment({postId}) {
       if (!currentUser) {
         navigate("/signin");
       }
-      const res = await fetch(`/api/comment/deleteComment/${commentId}`, {
+      const res = await fetch(`${BASE_URL}/api/comment/deleteComment/${commentId}`, {
         method: "DELETE",
+        credentials: "include",
       });
       if (res.ok) {
         const data = await res.json();

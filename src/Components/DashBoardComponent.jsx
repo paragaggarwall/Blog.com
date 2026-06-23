@@ -11,6 +11,7 @@ import {
 } from "react-icons/hi";
 import { Button, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "../config";
 
 export default function DashBoardComponent() {
   const { currentUser } = useSelector((state) => state.user);
@@ -28,7 +29,9 @@ export default function DashBoardComponent() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`/api/user/getusers?limit=5`);
+        const res = await fetch(`${BASE_URL}/api/user/getusers?limit=5`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
@@ -42,7 +45,9 @@ export default function DashBoardComponent() {
 
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?limit=5`);
+        const res = await fetch(`${BASE_URL}/api/post/getposts?limit=5`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setPosts(data.posts);
@@ -56,7 +61,9 @@ export default function DashBoardComponent() {
 
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/comment/getComments?limit=5`);
+        const res = await fetch(`${BASE_URL}/api/comment/getComments?limit=5`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setComments(data.comments);

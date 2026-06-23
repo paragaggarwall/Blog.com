@@ -10,6 +10,7 @@ import {
 } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { BASE_URL } from "../config";
 
 export default function DashboardPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -23,7 +24,9 @@ export default function DashboardPosts() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
+        const res = await fetch(`${BASE_URL}/api/post/getposts?userId=${currentUser._id}`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setPostData(data.posts);
@@ -46,7 +49,9 @@ export default function DashboardPosts() {
     const startIndex = postData.length;
     try {
       const res = await fetch(
-        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `${BASE_URL}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`, {
+          credentials: "include",
+        }
       );
       const data = await res.json();
       if (res.ok) {
@@ -66,9 +71,10 @@ export default function DashboardPosts() {
     setShowPopup(false);
     try {
       const res = await fetch(
-        `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
+        `${BASE_URL}/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
       const data = await res.json();

@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Table, TableHead, TableRow, Modal, Button } from "flowbite-react";
 // import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { BASE_URL } from "../config";
 
 export default function DashboardComments() {
   const { currentUser } = useSelector((state) => state.user);
@@ -16,7 +17,9 @@ export default function DashboardComments() {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/comment/getComments`);
+        const res = await fetch(`${BASE_URL}/api/comment/getComments`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setCommentData(data.comments);
@@ -39,7 +42,9 @@ export default function DashboardComments() {
     const startIndex = commentData.length;
     try {
       const res = await fetch(
-        `/api/comment/getComments?startIndex=${startIndex}`
+        `${BASE_URL}/api/comment/getComments?startIndex=${startIndex}`, {
+          credentials: "include",
+        }
       );
       const data = await res.json();
       if (res.ok) {
@@ -59,9 +64,10 @@ export default function DashboardComments() {
     setShowPopup(false);
     try {
       const res = await fetch(
-        `/api/comment/deleteComment/${commentIdToDelete}`,
+        `${BASE_URL}/api/comment/deleteComment/${commentIdToDelete}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
       const data = await res.json();

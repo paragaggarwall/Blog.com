@@ -6,7 +6,8 @@ import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import {useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom';
+import { BASE_URL } from "../config";
 
 export default function Create_Post() {
   const [file, setFile] = useState(null);
@@ -31,12 +32,13 @@ export default function Create_Post() {
       reader.onloadend = async () => {
         try {
           const base64data = reader.result;
-          const response = await axios.post("/api/upload/image", {
+          const response = await axios.post(`${BASE_URL}/api/upload/image`, {
             image: base64data
           }, {
             headers: {
               "Content-Type": "application/json"
             },
+            withCredentials: true,
             onUploadProgress: (progressEvent) => {
               const progress = (progressEvent.loaded / progressEvent.total) * 100;
               setPostImageProgress(progress.toFixed(0));
@@ -63,11 +65,12 @@ export default function Create_Post() {
   const handlePost = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/post/create", {
+      const res = await fetch(`${BASE_URL}/api/post/create`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(postFormData),
       });
       const data = await res.json();

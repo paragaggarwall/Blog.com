@@ -8,6 +8,8 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../config";
+
 
 export default function Update_Post() {
   const { currentUser } = useSelector((state) => state.user);
@@ -23,7 +25,9 @@ export default function Update_Post() {
   useEffect(() => {
     try {
       const fetchPost = async () => {
-        const res = await fetch(`/api/post/getposts?postId=${postId}`);
+        const res = await fetch(`${BASE_URL}/api/post/getposts?postId=${postId}`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (!res.ok) {
           console.log(data.message);
@@ -56,12 +60,13 @@ export default function Update_Post() {
       reader.onloadend = async () => {
         try {
           const base64data = reader.result;
-          const response = await axios.post("/api/upload/image", {
+          const response = await axios.post(`${BASE_URL}/api/upload/image`, {
             image: base64data
           }, {
             headers: {
               "Content-Type": "application/json"
             },
+            withCredentials: true,
             onUploadProgress: (progressEvent) => {
               const progress = (progressEvent.loaded / progressEvent.total) * 100;
               setPostImageProgress(progress.toFixed(0));
@@ -89,12 +94,13 @@ export default function Update_Post() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `/api/post/updatepost/${postFormData._id}/${currentUser._id}`,
+        `${BASE_URL}/api/post/updatepost/${postFormData._id}/${currentUser._id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify(postFormData),
         }
       );

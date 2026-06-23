@@ -19,6 +19,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { signoutSuccess } from "../redux/User/userSlice";
+import { BASE_URL } from "../config";
 
 export default function Header() {
   const path = useLocation().pathname;
@@ -41,8 +42,9 @@ export default function Header() {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch("/api/user/signout", {
+      const res = await fetch(`${BASE_URL}/api/user/signout`, {
         method: "POST",
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) {

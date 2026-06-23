@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import PostCrad from '../Components/PostCard.jsx'
+import PostCrad from '../Components/PostCard.jsx';
+import { BASE_URL } from "../config";
 
 export default function SearchPage() {
   const location = useLocation();
@@ -37,7 +38,9 @@ export default function SearchPage() {
     const fetchPosts = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/post/getposts?${searchQuery}`);
+      const res = await fetch(`${BASE_URL}/api/post/getposts?${searchQuery}`, {
+        credentials: "include",
+      });
       if (!res.ok) {
         setLoading(false);
         return;
@@ -86,7 +89,9 @@ export default function SearchPage() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set('startIndex', startIndex);
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/post/getposts?${searchQuery}`);
+    const res = await fetch(`${BASE_URL}/api/post/getposts?${searchQuery}`, {
+      credentials: "include",
+    });
     if (!res.ok) {
       return;
     }

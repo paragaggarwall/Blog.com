@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import CallToAction from "../Components/CallToAction";
 import Comment from "../Components/Comment";
 import PostCard from "../Components/PostCard";
+import { BASE_URL } from "../config";
 
 export default function Post() {
   const { postSlug } = useParams();
@@ -18,7 +19,9 @@ export default function Post() {
     const fetchPostData = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
+        const res = await fetch(`${BASE_URL}/api/post/getposts?slug=${postSlug}`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (!res.ok) {
           setError(true);
@@ -41,7 +44,9 @@ export default function Post() {
   useEffect(() => {
     try {
       const fetchRecentPosts = async () => {
-        const res = await fetch(`/api/post/getposts?limit=3`);
+        const res = await fetch(`${BASE_URL}/api/post/getposts?limit=3`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setRecentsPosts(data.posts);

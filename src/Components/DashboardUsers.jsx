@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import { Table, TableHead, TableRow, Modal, Button } from "flowbite-react";
 // import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import {FaCheck, FaTimes} from 'react-icons/fa'
+import {FaCheck, FaTimes} from 'react-icons/fa';
+import { BASE_URL } from "../config";
 
 export default function DashboardUsers() {
   const { currentUser } = useSelector((state) => state.user);
@@ -17,7 +18,9 @@ export default function DashboardUsers() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`/api/user/getusers`);
+        const res = await fetch(`${BASE_URL}/api/user/getusers`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (res.ok) {
           setUserData(data.users);
@@ -39,7 +42,9 @@ export default function DashboardUsers() {
   const handleShowMore = async () => {
     const startIndex = userData.length;
     try {
-      const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
+      const res = await fetch(`${BASE_URL}/api/user/getusers?startIndex=${startIndex}`, {
+        credentials: "include",
+      });
       const data = await res.json();
       if (res.ok) {
         setUserData((prev) => [...prev, ...data.users]);
@@ -57,8 +62,9 @@ export default function DashboardUsers() {
     const handleDeleteUser = async () => {
       setShowPopup(false);
       try {
-        const res = await fetch(`/api/user/delete/${userIdToDelete}`,{
+        const res = await fetch(`${BASE_URL}/api/user/delete/${userIdToDelete}`,{
           method: 'DELETE',
+          credentials: "include",
         });
         const data = await res.json();
         if(!res.ok){
